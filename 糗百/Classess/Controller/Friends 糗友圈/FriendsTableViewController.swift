@@ -52,6 +52,12 @@ class FriendsTableViewController: UITableViewController,FriendsCellDel {
         definesPresentationContext = true
         //        }
     }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if isFrineds {
+            MMPlayerView.shardTools.resetPlayer()
+        }
+    }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if isFrineds {

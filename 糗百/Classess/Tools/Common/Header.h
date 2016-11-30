@@ -16,7 +16,7 @@
 #import "NSString+MMNStringExt.h"
 #import "NSString+Extension.h"
 #import "UIImageView+Image.h"
-
+#import "FMDB.h"
 //#import "UMSocial.h"
 //#import "UMSocialQQHandler.h"
 #import "NSDate+Extension.h"

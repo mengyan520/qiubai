@@ -18,16 +18,23 @@ class FriendsTopicCell: UITableViewCell {
         return  grayView.frame.maxY;
     }
     func Data(FriendsData:FriendsData?,index:IndexPath?) {
-       // iconView.sd_setImage(with: URL.init(string:(FriendsData?.avatar_urls?.first?.pic_url)! ), placeholderImage: nil)
+        // iconView.sd_setImage(with: URL.init(string:(FriendsData?.avatar_urls?.first?.pic_url)! ), placeholderImage: nil)
         iconView.sd_setImage(with:  URL.init(string:(FriendsData?.avatar_urls?.first?.pic_url)! ), placeholderImage: UIImage.init(named: "default_avatar"), options: [.retryFailed,.refreshCached], completed: {[weak self] (image, error, type, url) in
             self?.iconView.addCorner(radius: 5)
         })
         titlelbl.text = FriendsData?.content
         contentlbl.text = FriendsData?.abstract
         countlbl.text = "动态 \(FriendsData!.article_count)  今日\(FriendsData!.today_article_count)"
-        // rowlbl.text = "\(index!.row + 1)"
+        
         
         typelbl.isHidden = !FriendsData!.is_anonymous
+        let width = (NSString.init(string: titlelbl.text!)).ew_width(with: Font(fontSize: 14), lineWidth: SCREEN_WIDTH)
+        
+        titlelbl.snp.updateConstraints({ (make) in
+            
+            make.width.equalTo(width > (SCREEN_WIDTH-50-20-60) ?(SCREEN_WIDTH-50-20-60) : width    )
+            
+        })
         guard index != nil  else {
             
             return
@@ -84,7 +91,8 @@ class FriendsTopicCell: UITableViewCell {
         titlelbl .snp.makeConstraints { (make) in
             
             make.left.equalTo(iconView.snp.right).offset(10)
-           
+            make.width.equalTo(10)
+            
             make.top.equalTo(iconView.snp.top)
         }
         typelbl.snp.makeConstraints { (make) in
@@ -114,7 +122,7 @@ class FriendsTopicCell: UITableViewCell {
             make.left.equalTo(contentView.snp.left)
             make.width.equalTo(SCREEN_WIDTH)
             make.height.equalTo(5)
-          //  make.bottom.equalTo(contentView.snp.bottom)
+            //  make.bottom.equalTo(contentView.snp.bottom)
         }
     }
     
@@ -138,8 +146,10 @@ class FriendsTopicCell: UITableViewCell {
     }()
     
     fileprivate lazy var titlelbl:UILabel = {
-        let lbl = UILabel.init(title: "昵称", fontSize: 14, color: RGB(r: 99, g: 99, b: 99, a: 1.0), screenInset: 10)
+        let lbl = UILabel.init(title: "昵称", fontSize: 14, color: RGB(r: 99, g: 99, b: 99, a: 1.0), screenInset: 0)
         lbl.numberOfLines = 1
+        lbl.textAlignment = .left
+        
         return lbl
     }()
     fileprivate lazy var typelbl:UILabel = {
@@ -166,8 +176,8 @@ class FriendsTopicCell: UITableViewCell {
         let lbl = UILabel.init(title: "标题", fontSize: 14, color: RGB(r: 163, g: 163, b: 155, a: 1.0), screenInset: 0)
         return lbl
     }()
-   
-        
+    
+    
     //分割线
     lazy var grayView:UIView = {
         let view = UIView.init()

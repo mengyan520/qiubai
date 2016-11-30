@@ -10,7 +10,7 @@ target ‘糗百’ do
     
     pod 'AFNetworking'
     pod 'SnapKit'
-    pod 'FMDB'
+    
     pod 'MJRefresh'
     pod 'SVProgressHUD'
     pod 'TTTAttributedLabel'

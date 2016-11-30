@@ -65,6 +65,7 @@
     dispatch_queue_t    _queue;
     FMDatabase          *_db;
     int                 _openFlags;
+    NSString            *_vfsName;
 }
 
 /** Path of database */
@@ -74,6 +75,10 @@
 /** Open flags */
 
 @property (atomic, readonly) int openFlags;
+
+/**  Custom virtual file system name */
+
+@property (atomic, copy) NSString *vfsName;
 
 ///----------------------------------------------------
 /// @name Initialization, opening, and closing of queue
@@ -139,6 +144,10 @@
 /** Close database used by queue. */
 
 - (void)close;
+
+/** Interupt pending database operation. */
+
+- (void)interrupt;
 
 ///-----------------------------------------------
 /// @name Dispatching database operations to queue

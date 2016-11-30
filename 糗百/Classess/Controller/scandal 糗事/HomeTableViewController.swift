@@ -40,7 +40,7 @@ class HomeTableViewController: UITableViewController,HomeCellDel {
     }
     
     func noti(noti:NSNotification) {
-        
+       
         guard let indexPath = noti.userInfo?["key"] as? IndexPath else {
             return
         }
@@ -120,6 +120,7 @@ class HomeTableViewController: UITableViewController,HomeCellDel {
         return 0
     }
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         if name == "video" {
             //            let controller = VideoTableViewController()
             //            controller.hidesBottomBarWhenPushed = true
@@ -196,6 +197,7 @@ class HomeTableViewController: UITableViewController,HomeCellDel {
                         }
                     }
                 }
+              // SQLiteManager.sharedManager.saveCacheData(array: model.items!)
                 self.dataArray = model.items!
                 if self.dataArray.count > 0 {
                     self.tableView.mj_footer.isHidden = false

@@ -50,10 +50,12 @@
     return self;
 }
 
+#if ! __has_feature(objc_arc)
 - (void)finalize {
     [self close];
     [super finalize];
 }
+#endif
 
 - (void)dealloc {
     [self close];
@@ -321,7 +323,9 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
 - (void)clearCachedStatements {
     
     for (NSMutableSet *statements in [_cachedStatements objectEnumerator]) {
-        [statements makeObjectsPerformSelector:@selector(close)];
+        for (FMStatement *statement in [statements allObjects]) {
+            [statement close];
+        }
     }
     
     [_cachedStatements removeAllObjects];
@@ -497,6 +501,10 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
 
 - (int)lastErrorCode {
     return sqlite3_errcode(_db);
+}
+
+- (int)lastExtendedErrorCode {
+    return sqlite3_extended_errcode(_db);
 }
 
 - (NSError*)errorWithMessage:(NSString*)message {
@@ -1075,6 +1083,12 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
     if (SQLITE_DONE == rc) {
         // all is well, let's return.
     }
+    else if (SQLITE_INTERRUPT == rc) {
+        if (_logsErrors) {
+            NSLog(@"Error calling sqlite3_step. Query was interrupted (%d: %s) SQLITE_INTERRUPT", rc, sqlite3_errmsg(_db));
+            NSLog(@"DB Query: %@", sql);
+        }
+    }
     else if (rc == SQLITE_ROW) {
         NSString *message = [NSString stringWithFormat:@"A executeUpdate is being called with a query string '%@'", sql];
         if (_logsErrors) {
@@ -1299,6 +1313,15 @@ int FMDBExecuteBulkSQLCallback(void *theBlockAsVoid, int columns, char **values,
     return _inTransaction;
 }
 
+- (BOOL)interrupt
+{
+    if (_db) {
+        sqlite3_interrupt([self sqliteHandle]);
+        return YES;
+    }
+    return NO;
+}
+
 static NSString *FMDBEscapeSavePointName(NSString *savepointName) {
     return [savepointName stringByReplacingOccurrencesOfString:@"'" withString:@"''"];
 }
@@ -1440,10 +1463,12 @@ void FMDBBlockSQLiteCallBackFunction(sqlite3_context *context, int argc, sqlite3
 @synthesize useCount=_useCount;
 @synthesize inUse=_inUse;
 
+#if ! __has_feature(objc_arc)
 - (void)finalize {
     [self close];
     [super finalize];
 }
+#endif
 
 - (void)dealloc {
     [self close];
