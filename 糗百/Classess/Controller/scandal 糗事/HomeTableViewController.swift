@@ -8,8 +8,8 @@
 import UIKit
 import MJRefresh
 import SDWebImage
-let textID = "text"
-let ImageID = "image"
+let textID = "textID"
+let ImageID = "imageID"
 let VideoID = "VideoID"
 
 class HomeTableViewController: UITableViewController,HomeCellDel {
@@ -23,24 +23,25 @@ class HomeTableViewController: UITableViewController,HomeCellDel {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadData()
+        
         let refreshheader = MJRefreshNormalHeader.init(refreshingTarget: self, refreshingAction: #selector(HomeTableViewController.loadData))
         tableView.mj_header = refreshheader
         let footer = MJRefreshAutoNormalFooter.init(refreshingTarget: self, refreshingAction:  #selector(HomeTableViewController.loadMoreData))
         tableView.mj_footer = footer
         tableView.mj_footer.isHidden = true
         
-                tableView.register(HomeTableViewCell.self, forCellReuseIdentifier: textID)
-                 tableView.register(HomeImageTableViewCell.self, forCellReuseIdentifier: ImageID)
-                 tableView.register(HomeVideoTableViewCell.self, forCellReuseIdentifier: VideoID)
+        tableView.register(HomeTableViewCell.self, forCellReuseIdentifier: textID)
+        tableView.register(HomeImageTableViewCell.self, forCellReuseIdentifier: ImageID)
+        tableView.register(HomeVideoTableViewCell.self, forCellReuseIdentifier: VideoID)
         tableView.estimatedRowHeight = 200
         tableView.separatorStyle = .none
         NotificationCenter.default.addObserver(self, selector: #selector(HomeTableViewController.noti(noti:)), name: NSNotification.Name(rawValue: "picHome"), object: nil)
         
+        loadData()
     }
     
     func noti(noti:NSNotification) {
-       
+        
         guard let indexPath = noti.userInfo?["key"] as? IndexPath else {
             return
         }
@@ -80,7 +81,9 @@ class HomeTableViewController: UITableViewController,HomeCellDel {
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let data = dataArray[indexPath.row]
+        
         let  cell = tableView.dequeueReusableCell(withIdentifier: data.cellId, for: indexPath) as! HomeTableViewCell
+        
         
         cell.Homedata(Homedata: data, index: indexPath)
         cell.del = self
@@ -126,7 +129,7 @@ class HomeTableViewController: UITableViewController,HomeCellDel {
             //            controller.hidesBottomBarWhenPushed = true
             //           controller.data = dataArray[indexPath.row]
             //            navigationController?.pushViewController(controller, animated: true)
-                   }else {
+        }else {
             
             let controller = DeatailViewController()
             controller.hidesBottomBarWhenPushed = true
@@ -151,7 +154,7 @@ class HomeTableViewController: UITableViewController,HomeCellDel {
         
         let controller = UserViewController()
         controller.hidesBottomBarWhenPushed = true
-       
+        
         navigationController?.pushViewController(controller, animated: true)
     }
     func shareClcik(text: String?, img: UIImage?, id: NSInteger?) {
@@ -161,7 +164,7 @@ class HomeTableViewController: UITableViewController,HomeCellDel {
         
         MMPlayerView.shardTools.placeholderImage =  pictureView.image
         MMPlayerView.shardTools.setVideoURLwithTableViewAtIndexPathwithImageViewTag(videoURL: URL.init(string: url)!, tableView:tableView,superView: pictureView, tag: 101)
-            MMPlayerView.shardTools.autoPlayTheVideo()
+        MMPlayerView.shardTools.autoPlayTheVideo()
     }
     @objc private  func Refresh() {
         tableView.mj_header.beginRefreshing()
@@ -183,6 +186,7 @@ class HomeTableViewController: UITableViewController,HomeCellDel {
                     print("格式错误")
                     return
                 }
+                SQLiteManager.sharedManager.saveCacheData(array: object["items"] as! [[String : AnyObject]])
                 let model = Model.init(dict: object)
                 if  (model.date != nil) {
                     self.date = model.date!
@@ -197,13 +201,21 @@ class HomeTableViewController: UITableViewController,HomeCellDel {
                         }
                     }
                 }
-              // SQLiteManager.sharedManager.saveCacheData(array: model.items!)
+                
                 self.dataArray = model.items!
                 if self.dataArray.count > 0 {
                     self.tableView.mj_footer.isHidden = false
                 }
                 self.tableView.reloadData()
                 
+            }else {
+                var arr = [HomeData]()
+                for data in SQLiteManager.sharedManager.checkChacheData()! {
+                    arr.append(HomeData.init(dict: (data )))
+                    
+                }
+                self.dataArray = arr
+                self.tableView.reloadData()
             }
             
             
@@ -224,6 +236,7 @@ class HomeTableViewController: UITableViewController,HomeCellDel {
                     print("格式错误")
                     return
                 }
+                SQLiteManager.sharedManager.saveCacheData(array: object["items"] as! [[String : AnyObject]])
                 let model = Model.init(dict: object)
                 self.dataArray = self.dataArray + model.items!
                 
@@ -231,13 +244,22 @@ class HomeTableViewController: UITableViewController,HomeCellDel {
                 if model.items!.count == 0 {
                     self.tableView.mj_footer.isHidden = true
                 }
+            }else {
+                var arr = [HomeData]()
+                for data in SQLiteManager.sharedManager.checkChacheData()! {
+                    arr.append(HomeData.init(dict: (data )))
+                    
+                }
+                self.dataArray = arr
+                self.tableView.reloadData()
             }
+
             
             
         }
         
     }
- 
+    
     /// 照片查看转场动画代理
     private lazy var photoBrowserAnimator: PhotoBrowserAnimator = PhotoBrowserAnimator()
     

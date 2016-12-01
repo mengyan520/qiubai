@@ -15,7 +15,7 @@ target ‘糗百’ do
     pod 'SVProgressHUD'
     pod 'TTTAttributedLabel'
    
-  
+  pod 'DKNightVersion'
     
     
     

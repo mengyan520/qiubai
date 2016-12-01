@@ -154,7 +154,7 @@ class HomeData:NSObject {
     }
     //可重用表示符号
     var cellId: String {
-        var ID = "word"
+        var ID = textID
       
         switch format! as NSString {
         case "word":

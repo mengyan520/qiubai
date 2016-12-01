@@ -31,7 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func changeToMainPage () {
         let backgroundImage = UIImage.init().ImageWithColor(color:WHITE_COLOR)
         
-        tabbarController?.addChildVc(arrVC: [HomeViewController(),FriendsViewController(),LiveViewController(), BaseTableViewController(),BaseViewController()])
+        tabbarController?.addChildVc(arrVC: [HomeViewController(),FriendsViewController(),LiveViewController(), BaseTableViewController(),MeTableViewController()])
       
         tabbarController?.BaseTabBarItem(titles: ["糗事","糗友圈","直播","小纸条","我"], Font: Font(fontSize: 12), titleColor:BLACK_COLOR, selectedTitleColor:mainColor, images:["icon_main","main_tab_qbfriends","main_tab_live","icon_chat","icon_me"], selectedImages: ["icon_main_active","main_tab_qbfriends_active","main_tab_live_active","icon_chat_active","icon_me_active"], barBackgroundImage: backgroundImage)
         
