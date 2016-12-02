@@ -14,9 +14,9 @@ target ‘糗百’ do
     pod 'MJRefresh'
     pod 'SVProgressHUD'
     pod 'TTTAttributedLabel'
-   
-  pod 'DKNightVersion'
     
+    pod 'SwiftTheme'
+    pod 'DJFPSKit'
     
     
 end

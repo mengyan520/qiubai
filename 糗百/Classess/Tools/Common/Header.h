@@ -17,7 +17,10 @@
 #import "NSString+Extension.h"
 #import "UIImageView+Image.h"
 #import "FMDB.h"
+#import <UMSocialCore/UMSocialCore.h>
+#import <UShareUI/UShareUI.h>
 
+#import "CAKeyframeAnimation+shakeAnimation.h"
 //#import "UMSocial.h"
 //#import "UMSocialQQHandler.h"
 #import "NSDate+Extension.h"

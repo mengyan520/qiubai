@@ -18,7 +18,7 @@ class SQLiteManager {
     
     /// 全局数据库操作队列
     let queue: FMDatabaseQueue
-    
+   
     private init() {
         
         // 0. 数据库路径 - 全路径(可读可写)
@@ -33,7 +33,7 @@ class SQLiteManager {
         // 如果数据库存在，会直接创建队列并且打开数据库
         queue = FMDatabaseQueue(path: path)
         
-        createTable()
+       // createTable()
     }
     
     /// 执行 SQL 返回字典数组
@@ -83,10 +83,10 @@ class SQLiteManager {
         return result
     }
     
-    private func createTable() {
+    func createTable(name:String) {
         
         // 1. 准备 SQL(只读，创建应用程序时，准备的素材)
-        let sql =  "CREATE TABLE IF NOT EXISTS json ('id' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT ,json text );"
+        let sql =  "CREATE TABLE IF NOT EXISTS \(name) ('id' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT ,json text );"
         
         
         // 2. 执行 SQL
@@ -114,7 +114,7 @@ class SQLiteManager {
     //     4> 调用 数据库方法 -> 如果是插入数据，应该使用事务！安全/快速
     //     5> 测试！
     //     */
-    func saveCacheData(array: [[String: AnyObject]]) {
+    func saveCacheData(array: [[String: AnyObject]],name:String) {
         
         
         
@@ -124,7 +124,7 @@ class SQLiteManager {
          2. 微博 json -> 字典序列化
          3. userId -> 登录的用户
          */
-        let sql = "INSERT OR REPLACE INTO json (id, json) VALUES (?,  ?)"
+        let sql = "INSERT OR REPLACE INTO \(name) (id, json) VALUES (?,  ?)"
         
         // 2. 遍历数组 - 如果不能确认数据插入的消耗时间，可以在实际开发中，写测试代码
         SQLiteManager.sharedManager.queue.inTransaction { (db, rollback) -> Void in
@@ -148,9 +148,9 @@ class SQLiteManager {
     }
     /// 目标：检查本地数据库中，是否存在需要的数据
     
-    func checkChacheData() -> [[String: AnyObject]]? {
+    func checkChacheData(name:String) -> [[String: AnyObject]]? {
         
-        let sql = "SELECT id, json FROM json "
+        let sql = "SELECT id, json FROM \(name) "
         
         // 2. 执行 SQL -> 返回结果集合
         let array = SQLiteManager.sharedManager.execRecordSet(sql: sql)

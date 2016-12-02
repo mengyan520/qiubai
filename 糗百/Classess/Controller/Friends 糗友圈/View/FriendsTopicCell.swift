@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import SwiftTheme
 class FriendsTopicCell: UITableViewCell {
     // MARK: - 模型赋值
     func rowHeight(data:FriendsData) -> CGFloat {
@@ -67,7 +67,7 @@ class FriendsTopicCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = WHITE_COLOR
         setUI()
-        
+        contentView.theme_backgroundColor = ThemeColorPicker(colors: "#FFF", "#000")
         
     }
     

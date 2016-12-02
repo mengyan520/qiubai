@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import DKNightVersion
+import SwiftTheme
 
 class MeTableViewController: UITableViewController {
 
@@ -24,20 +24,16 @@ class MeTableViewController: UITableViewController {
         Switch.addTarget(self, action: #selector(change(sender:)), for: .valueChanged)
         view.addSubview(Switch)
        
-       tableView.dk_backgroundColorPicker =  DKColor.blueColor()
+     view.theme_backgroundColor = ThemeColorPicker.pickerWithColors( ["#FFF", "#000"])
     }
     func change(sender:UISwitch)  {
-        
+        ThemeManager.setTheme(index: sender.isOn ? 1 : 0)
         if sender.isOn {
-            print("f")
-             // 打开切换为白天模式
-          //  self.dk_manager.themeVersion = DKThemeVersionNight;
-           self.dk_manager.dawnComing();
+            
+           
 
         }else {
-            // 关闭切换为夜间模式
-           // self.dk_manager.themeVersion = DKThemeVersionNormal;
-           self.dk_manager.nightFalling()
+           
         }
     }
     override func didReceiveMemoryWarning() {

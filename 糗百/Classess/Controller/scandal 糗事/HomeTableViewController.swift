@@ -6,8 +6,8 @@
 //  Copyright © 2016年 mm. All rights reserved.
 
 import UIKit
-import MJRefresh
-import SDWebImage
+
+import  MJRefresh
 let textID = "textID"
 let ImageID = "imageID"
 let VideoID = "VideoID"
@@ -19,11 +19,11 @@ class HomeTableViewController: UITableViewController,HomeCellDel {
     
     var page = 1
     
-    private var dataArray = [HomeData]()
+    var dataArray = [HomeData]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        tableView.backgroundColor = WHITE_COLOR
         let refreshheader = MJRefreshNormalHeader.init(refreshingTarget: self, refreshingAction: #selector(HomeTableViewController.loadData))
         tableView.mj_header = refreshheader
         let footer = MJRefreshAutoNormalFooter.init(refreshingTarget: self, refreshingAction:  #selector(HomeTableViewController.loadMoreData))
@@ -158,7 +158,40 @@ class HomeTableViewController: UITableViewController,HomeCellDel {
         navigationController?.pushViewController(controller, animated: true)
     }
     func shareClcik(text: String?, img: UIImage?, id: NSInteger?) {
-        
+        UMSocialUIManager.showShareMenuViewInWindow { (platformType, userInfo) -> Void in
+            //创建分享消息对象
+            let messageObject:UMSocialMessageObject = UMSocialMessageObject.init()
+            messageObject.text = "社会化组件UShare将各大社交平台接入您的应用，快速武装App。"//分享的文本
+            
+            /*
+             //1.分享图片
+             var shareObject:UMShareImageObject = UMShareImageObject.init()
+             shareObject.title = "Umeng分享"//显不显示有各个平台定
+             shareObject.descr = "描述信息"//显不显示有各个平台定
+             shareObject.thumbImage = UIImage.init(named: "icon")//显不显示有各个平台定
+             shareObject.shareImage = "http://dev.umeng.com/images/tab2_1.png"
+             messageObject.shareObject = shareObject;
+             */
+            
+            //2.分享分享网页
+            let shareObject:UMShareWebpageObject = UMShareWebpageObject.init()
+            shareObject.title = "分享标题"//显不显示有各个平台定
+            shareObject.descr = "描述信息"//显不显示有各个平台定
+            shareObject.thumbImage = UIImage.init(named: "icon")//缩略图，显不显示有各个平台定
+            shareObject.webpageUrl = "http://video.sina.com.cn/p/sports/cba/v/2013-10-22/144463050817.html"
+            messageObject.shareObject = shareObject;
+             //调用分享接口
+            UMSocialManager.default().share(to: platformType, messageObject: messageObject, currentViewController: self, completion: { (shareResponse, error) -> Void in
+                if error != nil {
+                    print("Share Fail with error ：%@", error)
+                }else{
+                    print("Share succeed")
+                }
+                
+            })
+            
+        }
+
     }
     func PlayBtnViewClick(sender: UIButton, tableView: UITableView, pictureView: UIImageView,url:String) {
         
@@ -186,7 +219,8 @@ class HomeTableViewController: UITableViewController,HomeCellDel {
                     print("格式错误")
                     return
                 }
-                SQLiteManager.sharedManager.saveCacheData(array: object["items"] as! [[String : AnyObject]])
+                SQLiteManager.sharedManager.createTable(name: self.name)
+                SQLiteManager.sharedManager.saveCacheData(array: object["items"] as! [[String : AnyObject]],name:self.name)
                 let model = Model.init(dict: object)
                 if  (model.date != nil) {
                     self.date = model.date!
@@ -210,7 +244,7 @@ class HomeTableViewController: UITableViewController,HomeCellDel {
                 
             }else {
                 var arr = [HomeData]()
-                for data in SQLiteManager.sharedManager.checkChacheData()! {
+                for data in SQLiteManager.sharedManager.checkChacheData(name:self.name)! {
                     arr.append(HomeData.init(dict: (data )))
                     
                 }
@@ -236,7 +270,7 @@ class HomeTableViewController: UITableViewController,HomeCellDel {
                     print("格式错误")
                     return
                 }
-                SQLiteManager.sharedManager.saveCacheData(array: object["items"] as! [[String : AnyObject]])
+                SQLiteManager.sharedManager.saveCacheData(array: object["items"] as! [[String : AnyObject]],name:self.name)
                 let model = Model.init(dict: object)
                 self.dataArray = self.dataArray + model.items!
                 
@@ -246,14 +280,14 @@ class HomeTableViewController: UITableViewController,HomeCellDel {
                 }
             }else {
                 var arr = [HomeData]()
-                for data in SQLiteManager.sharedManager.checkChacheData()! {
+                for data in SQLiteManager.sharedManager.checkChacheData(name:self.name)! {
                     arr.append(HomeData.init(dict: (data )))
                     
                 }
                 self.dataArray = arr
                 self.tableView.reloadData()
             }
-
+            
             
             
         }

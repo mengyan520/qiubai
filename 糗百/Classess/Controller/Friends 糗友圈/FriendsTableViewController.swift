@@ -7,8 +7,9 @@
 //
 
 import UIKit
-import MJRefresh
 import SVProgressHUD
+import  MJRefresh
+
 let nearbyID = "nearby"
 let videoID = "video"
 let topicID = "topic"
@@ -18,7 +19,7 @@ class FriendsTableViewController: UITableViewController,FriendsCellDel {
     
     var page = 1
     var isFrineds = false
-    private var dataArray = [FriendsData]()
+    var dataArray = [FriendsData]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,7 +31,7 @@ class FriendsTableViewController: UITableViewController,FriendsCellDel {
         tableView.mj_footer = footer
         tableView.mj_footer.isHidden = true
         
-        
+        tableView.backgroundColor = WHITE_COLOR
         tableView.register(FriendsTableViewCell.self, forCellReuseIdentifier: nearbyID)
         tableView.register(FriendsVideoCell.self, forCellReuseIdentifier: videoID)
         tableView.register(FriendsTopicCell.self, forCellReuseIdentifier: topicID)

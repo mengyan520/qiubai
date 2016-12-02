@@ -21,7 +21,7 @@ class HomeViewController: BaseViewController {
    var currentTag = 0
     override func viewDidLoad() {
         super.viewDidLoad()
-       setUI()
+              setUI()
          NotificationCenter.default.addObserver(self, selector: #selector(HomeViewController.RefreshHome), name: NSNotification.Name(rawValue: "RefreshHome"), object: nil)
            }
     func setUI() {
@@ -64,7 +64,13 @@ class HomeViewController: BaseViewController {
     }()
     func RefreshHome() {
          let vc = self.childViewControllers[currentTag] as! HomeTableViewController
-        vc.tableView.scrollToRow(at: IndexPath.init(row: 0, section: 0), at: .none, animated: false)
+        if vc.dataArray.count > 0 {
+            vc.tableView.scrollToRow(at: IndexPath.init(row: 0, section: 0), at: .none, animated: false)
+        }else {
+            
+            scrollView.scrollsToTop = false
+            vc.tableView.scrollsToTop = true
+        }
         vc.tableView.mj_header.beginRefreshing()
     }
 }

@@ -8,15 +8,16 @@
 
 import UIKit
 
-class MainTabBarViewController: UITabBarController {
+class MainTabBarViewController: UITabBarController,UITabBarControllerDelegate {
     var tag  = 0
-    var item = UITabBarItem.init()
+  
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+         delegate = self
         view.backgroundColor = WHITE_COLOR
     }
     override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
+       
         switch item.tag {
         case 0:
             if tag == 0 {
@@ -29,16 +30,18 @@ class MainTabBarViewController: UITabBarController {
         case 1:
             if tag == 1 {
                 
-            POSTNOTIFICATION(name: "RefreshFrineds", data: nil)
+                POSTNOTIFICATION(name: "RefreshFrineds", data: nil)
                 
             }else {
                 tag  = 1
             }
             break
         case 3:
+            tag = 2
+            
             let conr = LoginTableViewController()
-             let nav = UINavigationController.init(rootViewController: conr)
-             
+            let nav = UINavigationController.init(rootViewController: conr)
+            
             self.selectedViewController?.present(nav, animated: true, completion: nil)
             break
         default:
@@ -49,6 +52,12 @@ class MainTabBarViewController: UITabBarController {
         }
         
         
+    }
+    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+        if viewController == tabBarController.viewControllers?[3] {
+            return false
+        }
+        return true
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

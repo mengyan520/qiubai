@@ -32,9 +32,16 @@ class LoginTableViewController: UITableViewController {
         tableView.sectionFooterHeight = 0.1
         //设置头部视图从 第二组开始执行
         //tableView.sectionHeaderHeight = 30
-       tableView.separatorInset = .zero
-        tableView.tableFooterView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: 100))
-         tableView.tableFooterView?.backgroundColor = RED_COLOR
+        tableView.separatorInset = .zero
+        
+        tableView.tableFooterView = footView
+        footView.addSubview(loginBtn)
+        loginBtn.snp.makeConstraints { (make) in
+            make.centerX.equalTo(footView.snp.centerX)
+            make.height.equalTo(33)
+            make.top.equalTo(footView.snp.top).offset(10)
+            make.width.equalTo(SCREEN_WIDTH-80)
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -58,9 +65,27 @@ class LoginTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
         indexPath.section == 0 ? (cell.imageView?.image = UIImage.init(named: imgs[indexPath.row])) : (cell.imageView?.image = nil)
-        cell.textLabel?.text = titles[indexPath.section][indexPath.row]
+        
         cell.textLabel?.textColor = colors[indexPath.section][indexPath.row]
-       
+        if indexPath.section == 1 {
+            if indexPath.row == 0 {
+                cell.contentView.addSubview(accountTextField)
+                accountTextField.snp.makeConstraints({ (make) in
+                    make.edges.equalTo(cell.contentView.snp.edges)
+                    
+                })
+                accountTextField.placeholder = titles[indexPath.section][indexPath.row]
+            }else {
+                cell.contentView.addSubview(codeTextField)
+                codeTextField.snp.makeConstraints({ (make) in
+                    make.edges.equalTo(cell.contentView.snp.edges)
+                    
+                })
+                codeTextField.placeholder = titles[indexPath.section][indexPath.row]
+            }
+        }else {
+            cell.textLabel?.text = titles[indexPath.section][indexPath.row]
+        }
         return cell
     }
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -73,9 +98,9 @@ class LoginTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 30
     }
-//    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//        cell.separatorInset = .zero
-//    }
+    //    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    //        cell.separatorInset = .zero
+    //    }
     /*
      // Override to support conditional editing of the table view.
      override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -120,10 +145,65 @@ class LoginTableViewController: UITableViewController {
      // Pass the selected object to the new view controller.
      }
      */
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        tableView.endEditing(false)
+    }
     // MARK: - action
     func clickLeftBarButton() {
         self.dismiss(animated: true, completion: nil)
         
     }
+    func loginBtnClick(sender:UIButton)  {
+        
+        if  codeTextField.text?.ew_removeSpacesAndLineBreaks() == "" &&  accountTextField.text?.ew_removeSpacesAndLineBreaks() == "" {
+            let animation = CAKeyframeAnimation.shakeAnimation(codeTextField.layer.frame)
+            codeTextField.layer.add(animation!, forKey: kCATransition)
+            accountTextField.layer.add(animation!, forKey: kCATransition)
+        }else {
+          let alert = UIAlertController.init(title: "登录失败", message: "昵称或密码不正确", preferredStyle: .alert)
+            let action = UIAlertAction.init(title: "OK", style: .default, handler: nil)
+            alert.addAction(action)
+         present(alert, animated: true, completion: nil)
+        }
     
+    
+        
+        
+    }
+    
+    // MARK: - footView
+    private lazy var footView:UIView = {
+        let view = UIView.init(frame: CGRect.init(x: 0, y: 0, width: SCREEN_WIDTH, height: 100))
+        view.backgroundColor = RGB(r: 235, g: 235, b: 241, a: 1.0)
+        return view
+    }()
+    private lazy var loginBtn:UIButton = {
+        let btn = UIButton.init(title: "登 录", color: WHITE_COLOR, fontSize: 15, target: self, actionName: #selector(self.loginBtnClick(sender:)))
+        btn.backgroundColor = mainColor
+        btn.layer.cornerRadius = 5;
+        btn.layer.masksToBounds = true
+        return btn
+    }()
+    //输入框
+    private lazy var accountTextField:UITextField = {
+        let view = UITextField.init()
+        view.font = Font(fontSize: 15)
+        view.keyboardType = .default
+        view.leftView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: 10, height: 44))
+        view.leftViewMode = .always
+        view.leftView?.isUserInteractionEnabled = false
+        
+        
+        return view
+    }()
+    private lazy var codeTextField:UITextField = {
+        let view = UITextField.init()
+        view.font = Font(fontSize: 15)
+        view.keyboardType = .default
+        view.leftView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: 10, height: 44))
+        view.leftViewMode = .always
+        view.leftView?.isUserInteractionEnabled = false
+        view.isSecureTextEntry = true
+        return view
+    }()
 }

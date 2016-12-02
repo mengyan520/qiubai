@@ -8,7 +8,7 @@
 
 import UIKit
 import TTTAttributedLabel
-
+import SwiftTheme
 protocol FriendsCellDel:NSObjectProtocol {
     //跳转个人信息界面
     func topViewClick(uid:NSInteger)
@@ -105,7 +105,7 @@ class FriendsTableViewCell: UITableViewCell,TTTAttributedLabelDelegate {
         setUI()
         let long = UILongPressGestureRecognizer.init(target: self, action: #selector(self.long(long:)))
         self.addGestureRecognizer(long)
-        
+    contentView.theme_backgroundColor = ThemeColorPicker(colors: "#FFF", "#000")
     }
     // MARK: - 设置界面
     func setUI() {
@@ -215,7 +215,7 @@ class FriendsTableViewCell: UITableViewCell,TTTAttributedLabelDelegate {
     //头像
     private lazy var iconView:UIImageView = {
         let img = UIImageView.init()
-        img.backgroundColor = WHITE_COLOR
+        
         
         return img
     }()
@@ -223,6 +223,8 @@ class FriendsTableViewCell: UITableViewCell,TTTAttributedLabelDelegate {
     private lazy var namelbl:UILabel = {
         //
         let lbl = UILabel.init(title: "昵称", fontSize: 14, color: RGB(r: 99, g: 99, b: 99, a: 1.0), screenInset: 10)
+        
+       
         return lbl
     }()
     //状态

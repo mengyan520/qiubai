@@ -9,6 +9,7 @@
 import UIKit
 import MediaPlayer
 import SDWebImage
+import SwiftTheme
 protocol HomeCellDel:NSObjectProtocol {
     //跳转个人信息界面
     func topViewClick(uid:NSInteger)
@@ -123,6 +124,7 @@ func Homedata(Homedata:HomeData?,index:IndexPath?) {
         setUI()
         let long = UILongPressGestureRecognizer.init(target: self, action: #selector(HomeTableViewCell.long(long:)))
         self.addGestureRecognizer(long)
+        contentView.theme_backgroundColor = ThemeColorPicker(colors: "#FFF", "#000")
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -174,8 +176,7 @@ func Homedata(Homedata:HomeData?,index:IndexPath?) {
     //头像
     private lazy var iconView:UIImageView = {
         let img = UIImageView.init()
-       
-        // img.backgroundColor = WHITE_COLOR
+      
         return img
     }()
     //昵称

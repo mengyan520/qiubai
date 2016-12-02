@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import SwiftTheme
 extension UILabel {
     
     /// 便利构造函数
@@ -26,7 +26,7 @@ extension UILabel {
         screenInset: CGFloat = 0) {
             
         self.init()
-        
+         
             text = title
             textColor = color
             font = UIFont.systemFont(ofSize: fontSize)

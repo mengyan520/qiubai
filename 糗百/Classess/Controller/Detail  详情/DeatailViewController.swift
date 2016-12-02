@@ -256,8 +256,7 @@ extension DeatailViewController {
         bottomView.snp.updateConstraints { (make) -> Void in
             make.bottom.equalTo(view.snp.bottom).offset(offset)
         }
-        //    bottomView.frame = CGRect.init(x: 0, y: -offset, width: SCREEN_WIDTH, height: 49)
-        //     self.bottomView.frame = CGRect.init(x: 0, y:offset , width: SCREEN_WIDTH, height: 49)
+        
         // 3. 动画 － UIView 块动画 本质上是对 CAAnimation 的包装
         UIView.animate(withDuration: duration) { () -> Void in
             // 设置动画曲线
@@ -271,10 +270,6 @@ extension DeatailViewController {
             self.view.layoutIfNeeded()
             
         }
-        
-        // 调试动画时长 － keyPath 将动画添加到图层
-        // let anim = toolbar.layer.animationForKey("position")
-        //  print("动画时长 \(anim?.duration)")
-    }
+            }
     
 }

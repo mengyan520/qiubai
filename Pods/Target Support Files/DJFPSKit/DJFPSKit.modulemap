@@ -1,0 +1,6 @@
+framework module DJFPSKit {
+  umbrella header "DJFPSKit-umbrella.h"
+
+  export *
+  module * { export * }
+}

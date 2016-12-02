@@ -8,6 +8,8 @@
 
 import UIKit
 import SnapKit
+import SwiftTheme
+
 //MARK:- 颜色
 let BLACK_COLOR      = UIColor.black
 let DARKGRAY_COLOR   = UIColor.darkGray

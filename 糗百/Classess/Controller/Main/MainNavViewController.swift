@@ -12,7 +12,7 @@ class MainNavViewController: UINavigationController,UIGestureRecognizerDelegate 
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+       
         //interactivePopGestureRecognizer?.delegate = self
         let target = interactivePopGestureRecognizer?.delegate
         let pan = UIPanGestureRecognizer.init(target: target, action:  Selector(("handleNavigationTransition:")))

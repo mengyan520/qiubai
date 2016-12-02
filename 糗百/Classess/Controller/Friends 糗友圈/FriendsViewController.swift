@@ -64,7 +64,13 @@ var currentTag = 0
     }()
     func RefreshFrineds() {
         let vc = self.childViewControllers[currentTag] as! FriendsTableViewController
-         vc.tableView.scrollToRow(at: IndexPath.init(row: 0, section: 0), at: .none, animated: false)
+        if vc.dataArray.count > 0 {
+            vc.tableView.scrollToRow(at: IndexPath.init(row: 0, section: 0), at: .none, animated: false)
+        }else {
+        
+        scrollView.scrollsToTop = false
+        vc.tableView.scrollsToTop = true
+        }
         vc.tableView.mj_header.beginRefreshing()
     
     }
