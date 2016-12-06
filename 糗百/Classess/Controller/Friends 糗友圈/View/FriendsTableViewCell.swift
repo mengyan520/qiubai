@@ -17,8 +17,9 @@ protocol FriendsCellDel:NSObjectProtocol {
 class FriendsTableViewCell: UITableViewCell,TTTAttributedLabelDelegate {
     func rowHeight(data:FriendsData) -> CGFloat {
         
-       
+        
         Data(FriendsData: data, index: nil)
+        
         contentView.layoutIfNeeded()
         return  grayView.frame.maxY;
     }
@@ -54,6 +55,8 @@ class FriendsTableViewCell: UITableViewCell,TTTAttributedLabelDelegate {
             namelbl.textColor =  RGB(r: 99, g: 99, b: 99, a: 1.0)
         }
         contentlbl.text = FriendsData!.content
+        likeBtn.setTitle("\(FriendsData!.like_count)", for: .normal)
+        commentBtn.setTitle("\(FriendsData!.comment_count)", for: .normal)
         
         pictureView.imgData = FriendsData?.pic_urls
         pictureView.snp.updateConstraints { (make) -> Void in
@@ -63,6 +66,7 @@ class FriendsTableViewCell: UITableViewCell,TTTAttributedLabelDelegate {
             let offset = (FriendsData?.pic_urls?.count)! > 0 ? 10 : 0
             make.top.equalTo(contentlbl.snp.bottom).offset(offset)
         }
+        
         timeBtn.setTitle(Date.init().timeStringWithInterval(time: (FriendsData?.created_at)!), for: .normal)
         distancelbl.text = FriendsData?.distance
         if ((FriendsData?.topic) != nil) {
@@ -78,23 +82,82 @@ class FriendsTableViewCell: UITableViewCell,TTTAttributedLabelDelegate {
             if punches.count > 0 {
                 punchesView.isHidden = false
                 punchesView.punches = punches
-                punchesView.snp.makeConstraints({ (make) in
-                    make.top.equalTo(pictureView.snp.bottom).offset(10)
-                    make.left.equalTo(contentlbl.snp.left)
-                    make.right.equalTo(contentView.snp.right).offset(-10)
+                punchesView.snp.updateConstraints({ (make) in
+                    
+                    
                     make.height.equalTo(200)
                 })
-                distancelbl.snp.remakeConstraints({ (make) in
-                    
-                    make.top.equalTo(punchesView.snp.bottom).offset(10)
-                    
-                    make.left.equalTo(contentlbl.snp.left)
-                    make.width.equalTo(100)
-                })
+                
             }
         }
         
     }
+    func DeatailData(data:Article?,index:IndexPath?) {
+        Detaildata = data
+        
+        if data?.user != nil {
+            
+            let iconString = "\(data!.user!.id)" as NSString
+            
+            
+            iconView.sd_setImage(with:  URL.init(string: "http://pic.qiushibaike.com/system/avtnew/\(iconString.substring(to: 4))/\(data!.user!.id)/medium/\(data!.user!.icon!)"), placeholderImage: UIImage.init(named: "default_avatar"), options: [.retryFailed,.refreshCached], completed: {[weak self] (image, error, type, url) in
+                
+                self?.iconView.addCorner(radius: 20)
+            })
+            namelbl.text = data!.user!.login!
+        }else {
+            
+            iconView.image = UIImage.init(named: "default_avatar")
+            namelbl.text = "匿名用户"
+        }
+        
+        if (data?.is_me)! {
+            namelbl.textColor =  RGB(r: 220, g: 33, b: 36, a: 1.0)
+        }else {
+            namelbl.textColor =  RGB(r: 99, g: 99, b: 99, a: 1.0)
+        }
+        contentlbl.text = data!.content
+        likeBtn.setTitle("\(data!.like_count)", for: .normal)
+        commentBtn.setTitle("\(data!.comment_count)", for: .normal)
+        
+        pictureView.imgData = data?.pic_urls
+        pictureView.snp.updateConstraints { (make) -> Void in
+            make.height.equalTo(pictureView.bounds.height)
+            // 直接设置宽度数值
+            make.width.equalTo(pictureView.bounds.width)
+            let offset = (data?.pic_urls?.count)! > 0 ? 10 : 0
+            make.top.equalTo(contentlbl.snp.bottom).offset(offset)
+        }
+        
+        timeBtn.setTitle(Date.init().timeStringWithInterval(time: TimeInterval((data?.created_at)!)), for: .normal)
+        distancelbl.text = data?.distance
+        if ((data?.topic) != nil) {
+            
+            let range =  (contentlbl.text! as NSString).range(of: (data?.topic?.content)!)
+            
+            contentlbl.addLink(to: URL.init(string: "http://github.com/mattt/"), with: range)
+            
+            
+        }
+        
+        if let punches = data?.punches {
+            if punches.count > 0 {
+                punchesView.isHidden = false
+                punchesView.punches = punches
+                punchesView.snp.updateConstraints({ (make) in
+                    
+                    
+                    make.height.equalTo(200)
+                })
+                
+            }
+        }
+        grayView.snp.updateConstraints { (make) in
+            make.height.equalTo(0)
+            
+        }
+    }
+    
     // MARK: - 构造方法
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -105,7 +168,7 @@ class FriendsTableViewCell: UITableViewCell,TTTAttributedLabelDelegate {
         setUI()
         let long = UILongPressGestureRecognizer.init(target: self, action: #selector(self.long(long:)))
         self.addGestureRecognizer(long)
-    contentView.theme_backgroundColor = ThemeColorPicker(colors: "#FFF", "#000")
+        contentView.theme_backgroundColor = ThemeColorPicker(colors: "#FFF", "#000")
     }
     // MARK: - 设置界面
     func setUI() {
@@ -120,7 +183,8 @@ class FriendsTableViewCell: UITableViewCell,TTTAttributedLabelDelegate {
         contentView.addSubview(viedeoView)
         contentView.addSubview(grayView)
         contentView.addSubview(punchesView)
-        
+        contentView.addSubview(likeBtn)
+        contentView.addSubview(commentBtn)
         topView .snp.makeConstraints { (make) in
             make.top.left.right.equalTo(contentView)
             make.height.equalTo(60)
@@ -148,7 +212,7 @@ class FriendsTableViewCell: UITableViewCell,TTTAttributedLabelDelegate {
         contentlbl .snp.makeConstraints { (make) in
             make.top.equalTo(iconView.snp.bottom).offset(10)
             make.left.equalTo(namelbl.snp.left)
-            make.right.equalTo(contentView.snp.right).offset(-10)
+            make.width.equalTo(SCREEN_WIDTH - 40 - 10 - 20)
         }
         pictureView.snp.makeConstraints { (make) -> Void in
             make.top.equalTo(contentlbl.snp.bottom).offset(10)
@@ -156,18 +220,33 @@ class FriendsTableViewCell: UITableViewCell,TTTAttributedLabelDelegate {
             make.width.equalTo(80)
             make.height.equalTo(80)
         }
-        
-        distancelbl .snp.makeConstraints { (make) in
+        punchesView.snp.makeConstraints({ (make) in
             make.top.equalTo(pictureView.snp.bottom).offset(10)
+            make.left.equalTo(contentlbl.snp.left)
+            make.right.equalTo(contentView.snp.right).offset(-10)
+            make.height.equalTo(0)
+        })
+        
+        
+        commentBtn.snp.makeConstraints { (make) in
+            make.top.equalTo(punchesView.snp.bottom).offset(10)
+            make.right.equalTo(timeBtn.snp.right)
+        }
+        likeBtn.snp.makeConstraints { (make) in
+            make.top.equalTo(punchesView.snp.bottom).offset(10)
+            make.right.equalTo(commentBtn.snp.left).offset(-10)
+        }
+        distancelbl.snp.makeConstraints { (make) in
+            make.centerY.equalTo(likeBtn.snp.centerY)
             make.left.equalTo(contentlbl.snp.left)
             make.width.equalTo(100)
         }
-        grayView .snp.makeConstraints { (make) in
-            make.top.equalTo(distancelbl.snp.bottom).offset(10)
+        grayView.snp.makeConstraints { (make) in
+            make.top.equalTo(likeBtn.snp.bottom).offset(10)
             make.left.equalTo(contentView.snp.left)
             make.width.equalTo(SCREEN_WIDTH)
             make.height.equalTo(5)
-          //  make.bottom.equalTo(contentView.snp.bottom)
+            //make.bottom.equalTo(contentView.snp.bottom)
         }
     }
     required init?(coder aDecoder: NSCoder) {
@@ -203,7 +282,7 @@ class FriendsTableViewCell: UITableViewCell,TTTAttributedLabelDelegate {
     // MARK: - 懒加载
     weak var del:FriendsCellDel?
     var index:IndexPath?
-    
+    var Detaildata:Article?
     var Friendsdata:FriendsData?
     private var imgArray = [UIImageView]()
     lazy var topView:UIView = {
@@ -224,7 +303,7 @@ class FriendsTableViewCell: UITableViewCell,TTTAttributedLabelDelegate {
         //
         let lbl = UILabel.init(title: "昵称", fontSize: 14, color: RGB(r: 99, g: 99, b: 99, a: 1.0), screenInset: 10)
         
-       
+        
         return lbl
     }()
     //状态
@@ -244,7 +323,7 @@ class FriendsTableViewCell: UITableViewCell,TTTAttributedLabelDelegate {
         return lbl
     }()
     //时间
-    private lazy var timeBtn:UIButton = {
+    lazy var timeBtn:UIButton = {
         let btn = UIButton.init(title: "1小时之前", color: RGB(r: 99, g: 99, b: 99, a: 1.0), fontSize: 12, target: self, actionName: #selector(self.btnClick(sender:)))
         return btn
     }()
@@ -262,14 +341,23 @@ class FriendsTableViewCell: UITableViewCell,TTTAttributedLabelDelegate {
         img.backgroundColor = WHITE_COLOR
         return img
     }()
-    
+    //点赞
+    private lazy var likeBtn:UIButton = {
+        let btn = UIButton.init(title: "1", color: RGB(r: 99, g: 99, b: 99, a: 1.0), SelectedColor: nil, imageName: nil, fontSize: 12, target: self, actionName:  #selector(self.btnClick(sender:)))
+        return btn
+    }()
+    //评论
+    lazy var commentBtn:UIButton = {
+        let btn = UIButton.init(title: "1", color: RGB(r: 99, g: 99, b: 99, a: 1.0), SelectedColor: nil, imageName: nil, fontSize: 12, target: self, actionName:  #selector(self.btnClick(sender:)))
+        return btn
+    }()
     //分割线
     lazy var grayView:UIView = {
         let view = UIView.init()
         view.backgroundColor = RGB(r: 239, g: 239, b: 239, a: 1.0)
         return view
     }()
-    private lazy var punchesView:PunchesView = {
+    lazy var punchesView:PunchesView = {
         let view = PunchesView.init()
         view.isHidden = true
         return view

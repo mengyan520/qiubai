@@ -2,8 +2,7 @@
 //  SQLiteManager.swift
 
 //
-//  Created by male on 15/10/30.
-//  Copyright © 2015年 itheima. All rights reserved.
+
 //
 
 import Foundation
@@ -18,7 +17,7 @@ class SQLiteManager {
     
     /// 全局数据库操作队列
     let queue: FMDatabaseQueue
-   
+    
     private init() {
         
         // 0. 数据库路径 - 全路径(可读可写)
@@ -33,7 +32,7 @@ class SQLiteManager {
         // 如果数据库存在，会直接创建队列并且打开数据库
         queue = FMDatabaseQueue(path: path)
         
-       // createTable()
+        // createTable()
     }
     
     /// 执行 SQL 返回字典数组
@@ -51,15 +50,15 @@ class SQLiteManager {
             
             
             
-            guard let rs = try! db?.executeQuery(sql: sql) else {
+            guard let rs = try? db?.executeQuery(sql: sql) else {
                 print("没有结果")
                 
                 return
             }
             
-            while rs.next() {
+            while rs!.next() {
                 // 1. 列数
-                let colCount = rs.columnCount()
+                let colCount = rs!.columnCount()
                 
                 // 创建字典
                 var dict = [String: AnyObject]()
@@ -67,9 +66,9 @@ class SQLiteManager {
                 // 2. 遍历每一列
                 for col in 0..<colCount {
                     // 1> 列名
-                    let name = rs.columnName(for: col)
+                    let name = rs!.columnName(for: col)
                     // 2> 值
-                    let obj = rs.object(forColumnIndex: col)
+                    let obj = rs!.object(forColumnIndex: col)
                     
                     // 3> 设置字典
                     dict[name!] = obj as AnyObject?
@@ -132,7 +131,7 @@ class SQLiteManager {
             for dict in array {
                 
                 let statusId = dict["id"] as! Int
-               
+                
                 // 2> 序列化字典 -> 二进制数据
                 let json = try! JSONSerialization.data(withJSONObject: dict, options: [])
                 
@@ -149,14 +148,15 @@ class SQLiteManager {
     /// 目标：检查本地数据库中，是否存在需要的数据
     
     func checkChacheData(name:String) -> [[String: AnyObject]]? {
-        
+       
         let sql = "SELECT id, json FROM \(name) "
         
         // 2. 执行 SQL -> 返回结果集合
         let array = SQLiteManager.sharedManager.execRecordSet(sql: sql)
+        
         var arrayM = [[String: AnyObject]]()
         for dict in array {
-           
+            
             let jsonData = dict["json"] as! Data
             let result = try! JSONSerialization.jsonObject(with: jsonData, options: [])
             

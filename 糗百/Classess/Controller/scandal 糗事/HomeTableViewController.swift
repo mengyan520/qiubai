@@ -116,6 +116,9 @@ class HomeTableViewController: UITableViewController,HomeCellDel {
         return nil
     }
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if dataArray.count == 0 {
+            return 0
+        }
         if name == "history" {
             
             return 20
@@ -243,6 +246,7 @@ class HomeTableViewController: UITableViewController,HomeCellDel {
                 self.tableView.reloadData()
                 
             }else {
+            
                 var arr = [HomeData]()
                 for data in SQLiteManager.sharedManager.checkChacheData(name:self.name)! {
                     arr.append(HomeData.init(dict: (data )))

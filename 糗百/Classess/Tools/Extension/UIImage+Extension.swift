@@ -53,7 +53,7 @@ extension UIImage {
         UIGraphicsEndImageContext()
       return result!
     }
-    func drawRectWithRoundCornor(radius: CGFloat, size: CGSize, backColor: UIColor = UIColor.white, lineWith: CGFloat = 1, lineColor: UIColor = UIColor.darkGray) -> UIImage? {
+    func drawRectWithRoundCornor(radius: CGFloat, size: CGSize, backColor: UIColor = UIColor.clear, lineWith: CGFloat = 1, lineColor: UIColor = UIColor.darkGray) -> UIImage? {
         let rect = CGRect.init(origin: CGPoint.init(x: 0, y: 0), size: size)
         UIGraphicsBeginImageContextWithOptions(rect.size, false, 0)
        

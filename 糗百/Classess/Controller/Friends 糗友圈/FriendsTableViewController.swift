@@ -23,7 +23,7 @@ class FriendsTableViewController: UITableViewController,FriendsCellDel {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-       
+        
         loadData()
         let refreshheader = MJRefreshNormalHeader.init(refreshingTarget: self, refreshingAction: #selector(FriendsTableViewController.loadData))
         tableView.mj_header = refreshheader
@@ -37,6 +37,7 @@ class FriendsTableViewController: UITableViewController,FriendsCellDel {
         tableView.register(FriendsTopicCell.self, forCellReuseIdentifier: topicID)
         tableView.estimatedRowHeight = 200
         tableView.separatorStyle = .none
+        
         if !isFrineds {
             
             NotificationCenter.default.addObserver(self, selector: #selector(FriendsTableViewController.noti(noti:)), name: NSNotification.Name(rawValue: "pic"), object: nil)
@@ -48,10 +49,7 @@ class FriendsTableViewController: UITableViewController,FriendsCellDel {
             tableView.tableHeaderView = searchView
             
         }
-        //        if !isFrineds {
-        //
-        definesPresentationContext = true
-        //        }
+        
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -132,16 +130,12 @@ class FriendsTableViewController: UITableViewController,FriendsCellDel {
     }
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
-      
+        
         return dataArray[indexPath.row].FrinedsrowHeight
     }
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-        //        let controller = DeatailViewController()
-        //        controller.isFrineds = true
-        //        controller.hidesBottomBarWhenPushed = true
-        //        controller.id = dataArray[indexPath.row].id
-        //        navigationController?.pushViewController(controller, animated: true)
+        
         
         if name == "topic" {
             
@@ -152,6 +146,16 @@ class FriendsTableViewController: UITableViewController,FriendsCellDel {
             controller.isFrineds = true
             controller.name = "\( dataArray[indexPath.row].id)"
             controller.title = dataArray[indexPath.row].content
+            navigationController?.pushViewController(controller, animated: true)
+        }else {
+            let controller = FriendsDetailViewController()
+            controller.hidesBottomBarWhenPushed = true
+            controller.height = dataArray[indexPath.row].FrinedsrowHeight
+            //controller.dataArray = [dataArray[indexPath.row]]
+            controller.id = dataArray[indexPath.row].id
+            if name == "video" {
+                controller.isVideo  = true
+            }
             navigationController?.pushViewController(controller, animated: true)
         }
         

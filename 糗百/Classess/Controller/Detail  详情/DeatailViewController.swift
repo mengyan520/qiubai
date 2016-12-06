@@ -19,7 +19,7 @@ class DeatailViewController: BaseViewController {
     var dataArray = [Article]()
     
     var commetnsArray = [[HomeData]]()
-    var isFrineds = false
+   
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "糗事\(id)"
@@ -44,10 +44,8 @@ class DeatailViewController: BaseViewController {
     
     // MARK: - 网络方法
     func loadData() {
-        var url  =  "/article/\(id)/latest/comments?article=1&count=50&page=1&AdID=1474965093760583571B68"
-        if isFrineds {
-            url = "https://circle.qiushibaike.com/article/8789925/info?longitude=116.4593160460782&latitude=39.87300024288396&count=30&page=1&AdID=1479699034788483571B68"
-        }
+        let url  =  "/article/\(id)/latest/comments?article=1&count=50&page=1&AdID=1474965093760583571B68"
+       
         NetworkTools.shardTools.requestF(method: .GET, URLString: url, parameters: nil) { (result, error) in
             //  print(self.id)
             if error == nil {
@@ -81,15 +79,12 @@ class DeatailViewController: BaseViewController {
     }
     
     func loadCommentData() {
-        var url  = "/article/\(id)/hot/comments?count=30&page=1&AdID=1474965275245283571B68"
-        if isFrineds {
-            url = "https://circle.qiushibaike.com/article/\(id)/info?longitude=116.4593160460782&latitude=39.87300024288396&count=30&page=1&AdID=1479699034788483571B68"
-        }
+        let  url  = "/article/\(id)/hot/comments?count=30&page=1&AdID=1474965275245283571B68"
         
         NetworkTools.shardTools.requestF(method: .GET, URLString: url, parameters: nil) { (result, error) in
             
             if error == nil {
-                if error == nil {
+               
                     guard let object = result as? [String: AnyObject] else {
                         print("格式错误")
                         return
@@ -97,20 +92,14 @@ class DeatailViewController: BaseViewController {
                     
                     let model = Model.init(dict: object)
                     
-                    if self.isFrineds {
-                        print(model.article!)
-                        self.dataArray.append(model.article!)
-                        self.commetnsArray.append(model.hot_comments!)
-                        self.commetnsArray.append(model.comments!)
-                        self.view.addSubview(self.tableView)
-                    }else {
+                   
                         self.commetnsArray.append(model.items!)
                         self.loadData()
-                    }
+                    
                 }
                 
                 
-            }
+            
             
             
         }
@@ -135,6 +124,7 @@ class DeatailViewController: BaseViewController {
         let view = BottomCommentView.init(frame:CGRect.init())
         return view
     }()
+   
 }
 // MARK: - 数据源/代理方法
 extension DeatailViewController:UITableViewDelegate,UITableViewDataSource {

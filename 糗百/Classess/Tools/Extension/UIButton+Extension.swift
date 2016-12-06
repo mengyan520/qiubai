@@ -83,4 +83,20 @@ extension UIButton {
         
         sizeToFit()
     }
+    convenience init(title: String, color: UIColor,SelectedColor: UIColor?,imageName: String?,fontSize: CGFloat,target: AnyObject?, actionName: Selector?) {
+        self.init()
+        if let imageName = imageName {
+            setImage(UIImage(named: imageName), for: .normal)
+        }
+        setTitle(title, for: .normal)
+        setTitleColor(color, for: .normal)
+        if let color = SelectedColor {
+            setTitleColor(color, for: .selected)
+        }
+        titleLabel?.font = UIFont.systemFont(ofSize: fontSize)
+        if let actionName = actionName {
+            self.addTarget(target, action: actionName, for: .touchUpInside)
+        }
+        sizeToFit()
+    }
 }

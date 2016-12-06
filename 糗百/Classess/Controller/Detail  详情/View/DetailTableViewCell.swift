@@ -34,31 +34,56 @@ class DetailTableViewCell: UITableViewCell {
                 namelbl.text = "匿名用户"
             }
             
-            contentlbl.text = data!.content?.components(separatedBy: "楼：").last
             
-            if (((data?.content)?.range(of: "回复")) != nil) {
-                referView.isHidden = false
-                referNamelbl.text = data?.refer?.user?.login
-                referText.text = data?.refer?.content
-                grayView.snp.remakeConstraints({ (make) in
-                    make.top.equalTo(referView.snp.bottom).offset(10)
-                    make.left.equalTo(contentlbl.snp.left)
-                    make.right.equalTo(contentView.snp.right)
-                    make.height.equalTo(0.5)
-                })
+            if data?.user_ip != nil {
+                contentlbl.text = data!.content
+                if ((data?.comment) != nil) {
+                    referView.isHidden = false
+                    referNamelbl.text = data?.comment_user?.login
+                    referText.text = data?.comment?.content
+                    grayView.snp.remakeConstraints({ (make) in
+                        make.top.equalTo(referView.snp.bottom).offset(10)
+                        make.left.equalTo(contentlbl.snp.left)
+                        make.right.equalTo(contentView.snp.right)
+                        make.height.equalTo(0.5)
+                    })
+                }else {
+                    referView.isHidden = true
+                    grayView.snp.remakeConstraints({ (make) in
+                        make.top.equalTo(contentlbl.snp.bottom).offset(10)
+                        make.left.equalTo(contentlbl.snp.left)
+                        make.right.equalTo(contentView.snp.right)
+                        make.height.equalTo(0.5)
+                    })
+                }
+                
             }else {
-                referView.isHidden = true
-                grayView.snp.remakeConstraints({ (make) in
-                    make.top.equalTo(contentlbl.snp.bottom).offset(10)
-                    make.left.equalTo(contentlbl.snp.left)
-                    make.right.equalTo(contentView.snp.right)
-                    make.height.equalTo(0.5)
-                })
+                contentlbl.text = data!.content?.components(separatedBy: "楼：").last
+                if (((data?.content)?.range(of: "回复")) != nil) {
+                    referView.isHidden = false
+                    referNamelbl.text = data?.refer?.user?.login
+                    referText.text = data?.refer?.content
+                    grayView.snp.remakeConstraints({ (make) in
+                        make.top.equalTo(referView.snp.bottom).offset(10)
+                        make.left.equalTo(contentlbl.snp.left)
+                        make.right.equalTo(contentView.snp.right)
+                        make.height.equalTo(0.5)
+                    })
+                }else {
+                    referView.isHidden = true
+                    grayView.snp.remakeConstraints({ (make) in
+                        make.top.equalTo(contentlbl.snp.bottom).offset(10)
+                        make.left.equalTo(contentlbl.snp.left)
+                        make.right.equalTo(contentView.snp.right)
+                        make.height.equalTo(0.5)
+                    })
+                }
             }
-            
         }
         
     }
+    
+    
     // MARK: - 构造方法
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -174,7 +199,7 @@ class DetailTableViewCell: UITableViewCell {
         lbl.textAlignment = .left
         return lbl
     }()
-   
+    
     //分割线
     private lazy var grayView:UIView = {
         let view = UIView.init()

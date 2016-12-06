@@ -17,6 +17,28 @@ class FriendsVideoCell: FriendsTableViewCell {
 //        return  grayView.frame.maxY;
 //    }
     // MARK: - 模型赋值
+    override func DeatailData(data: Article?, index: IndexPath?) {
+        super.DeatailData(data: data, index: index)
+        let h = data?.video?.height
+        let w = data?.video?.width
+        let height = h! * (SCREEN_WIDTH-60-10) / w!
+        
+        viedeoView.sd_setImage(with: URL.init(string: (data?.video?.pic_url)!)! , placeholderImage: UIImage.init().ImageWithColor(color:WHITE_COLOR))
+        
+        
+        viedeoView.snp.updateConstraints { (make) in
+            
+            
+            make.height.equalTo(height)
+            
+        }
+        punchesView.snp.remakeConstraints({ (make) in
+            make.top.equalTo(viedeoView.snp.bottom).offset(10)
+            make.left.equalTo(contentlbl.snp.left)
+            make.right.equalTo(contentView.snp.right).offset(-10)
+            make.height.equalTo(0)
+        })
+    }
     override func Data(FriendsData: FriendsData?, index: IndexPath?) {
         super.Data(FriendsData: FriendsData, index: index)
         
@@ -33,13 +55,11 @@ class FriendsVideoCell: FriendsTableViewCell {
             make.height.equalTo(height)
             
         }
-        distancelbl.snp.remakeConstraints({ (make) in
+        punchesView.snp.remakeConstraints({ (make) in
             make.top.equalTo(viedeoView.snp.bottom).offset(10)
-            
-            
-            
             make.left.equalTo(contentlbl.snp.left)
-            make.width.equalTo(100)
+            make.right.equalTo(contentView.snp.right).offset(-10)
+            make.height.equalTo(0)
         })
         
     }
@@ -59,8 +79,8 @@ class FriendsVideoCell: FriendsTableViewCell {
     }
     @objc private func BtnClick(sender:UIButton) {
         MMPlayerView.shardTools.placeholderImage =  viedeoView.image
-        
-        MMPlayerView.shardTools.setVideoURLwithTableViewAtIndexPathwithImageViewTag(videoURL: URL.init(string: (Friendsdata?.video?.high_url)!)!, tableView:self.superview?.superview as! UITableView,superView: viedeoView, tag: 101)
+    
+        MMPlayerView.shardTools.setVideoURLwithTableViewAtIndexPathwithImageViewTag(videoURL: URL.init(string:(Detaildata != nil) ? (Detaildata?.video?.high_url)! :  (Friendsdata?.video?.high_url)!)!, tableView:self.superview?.superview as! UITableView,superView: viedeoView, tag: 101)
         MMPlayerView.shardTools.autoPlayTheVideo()
         
         

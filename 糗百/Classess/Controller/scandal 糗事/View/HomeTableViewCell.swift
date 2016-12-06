@@ -34,11 +34,11 @@ class HomeTableViewCell: UITableViewCell {
     // MARK: - 模型赋值
     func Detaildata(data:Article?,isView:Bool?) {
         self.Detaildata = data
-       
+        
         if data?.user != nil {
             
             let iconString = "\(data!.user!.id)" as NSString
-           
+            
             iconView.sd_setImage(with:  URL.init(string: "http://pic.qiushibaike.com/system/avtnew/\(iconString.substring(to: 4))/\(data!.user!.id)/medium/\(data!.user!.icon!)"), placeholderImage: UIImage.init(named: "default_avatar"), options: [.retryFailed,.refreshCached], completed: {[weak self] (image, error, type, url) in
                 self?.iconView.addCorner(radius: 20)
             })
@@ -56,16 +56,18 @@ class HomeTableViewCell: UITableViewCell {
         lovelbl.text = "好笑 " + "\(data!.votes!.up)" + "  ·  评论 " + "\(data!.comments_count)" + "  ·  分享 " + "\(data!.share_count)"
         
         grayView.snp.updateConstraints { (make) in
+            make.top.equalTo(hotlbl.snp.bottom).offset(-10)
             if isView! {
-            make.height.equalTo(1)
+                
+                make.height.equalTo(1)
             }else {
                 make.height.equalTo(0)
-
+                
             }
         }
-
+        
     }
-func Homedata(Homedata:HomeData?,index:IndexPath?) {
+    func Homedata(Homedata:HomeData?,index:IndexPath?) {
         
         self.index = index
         self.Homedata = Homedata
@@ -87,19 +89,19 @@ func Homedata(Homedata:HomeData?,index:IndexPath?) {
         typelbl.text = Homedata!.type
         contentlbl.text = Homedata!.content
         lovelbl.text = "好笑 " + "\(Homedata!.votes!.up)" + "  ·  评论 " + "\(Homedata!.comments_count)" + "  ·  分享 " + "\(Homedata!.share_count)"
-    
-    
+        
+        
         if ((Homedata?.hot_comment) != nil) {
             hotlbl.isHidden = false
             hotlbl.text = (Homedata?.hot_comment?.user?.login)! + "：" + (Homedata?.hot_comment?.content)!
             grayView.snp.remakeConstraints({ (make) in
-               
+                
                 make.top.equalTo(hotlbl.snp.bottom).offset(10)
                 make.left.equalTo(contentView.snp.left)
                 make.width.equalTo(SCREEN_WIDTH)
                 make.height.equalTo(10)
             })
-        hotlbl.attributedText = hotlbl.text!.SubStringColor(subString: (Homedata?.hot_comment?.user?.login!)!, color: RGB(r: 85, g: 85, b: 106, a: 1.0), font: Font(fontSize: 12))
+            hotlbl.attributedText = hotlbl.text!.SubStringColor(subString: (Homedata?.hot_comment?.user?.login!)!, color: RGB(r: 85, g: 85, b: 106, a: 1.0), font: Font(fontSize: 12))
         }else {
             hotlbl.isHidden = true
             grayView.snp.remakeConstraints({ (make) in
@@ -140,7 +142,7 @@ func Homedata(Homedata:HomeData?,index:IndexPath?) {
         
         
     }
-     // MARK: - action
+    // MARK: - action
     
     func long(long:UILongPressGestureRecognizer)  {
         if long.state == .began {
@@ -160,9 +162,9 @@ func Homedata(Homedata:HomeData?,index:IndexPath?) {
         sender.isSelected = true
         del?.bottomBtnViewClick(sender: sender,index: self.index)
     }
-   
+    
     // MARK: - 懒加载
-   weak var del:HomeCellDel?
+    weak var del:HomeCellDel?
     var index:IndexPath?
     var Homedata:HomeData?
     var Detaildata:Article?
@@ -176,19 +178,19 @@ func Homedata(Homedata:HomeData?,index:IndexPath?) {
     //头像
     private lazy var iconView:UIImageView = {
         let img = UIImageView.init()
-      
+        
         return img
     }()
     //昵称
     private lazy var namelbl:UILabel = {
         let lbl =  UILabel.init(title: "昵称", fontSize: 14, color: RGB(r: 99, g: 99, b: 99, a: 1.0), screenInset: 10)
-         lbl.backgroundColor = CLEAR_COLOR
+        lbl.backgroundColor = CLEAR_COLOR
         return lbl
     }()
     //状态
     private lazy var typelbl:UILabel = {
         let lbl =  UILabel.init(title: "", fontSize: 14, color: RGB(r: 163, g: 163, b: 155, a: 1.0), screenInset: 0)
-                 lbl.backgroundColor = CLEAR_COLOR
+        lbl.backgroundColor = CLEAR_COLOR
         return lbl
     }()
     //正文
@@ -237,6 +239,7 @@ func Homedata(Homedata:HomeData?,index:IndexPath?) {
     //热门评论
     lazy var hotlbl:UILabel = {
         let lbl = UILabel.init(title: "昵称", fontSize: 12, color:  RGB(r: 212, g: 212, b: 215, a: 1.0), screenInset: 10)
+        lbl.isHidden = true
         return lbl
     }()
     //分割线
@@ -245,7 +248,7 @@ func Homedata(Homedata:HomeData?,index:IndexPath?) {
         view.backgroundColor = RGB(r: 239, g: 239, b: 239, a: 1.0)
         return view
     }()
-
+    
     // MARK: - 设置界面
     func setUI() {
         contentView.addSubview(topView)
@@ -253,7 +256,7 @@ func Homedata(Homedata:HomeData?,index:IndexPath?) {
         topView.addSubview(namelbl)
         topView.addSubview(typelbl)
         contentView.addSubview(contentlbl)
-   
+        
         contentView.addSubview(lovelbl)
         contentView.addSubview(loveBtn)
         contentView.addSubview(againstBtn)
@@ -261,7 +264,7 @@ func Homedata(Homedata:HomeData?,index:IndexPath?) {
         contentView.addSubview(shareBtn)
         contentView.addSubview(hotlbl)
         contentView.addSubview(grayView)
-       
+        
         contentView.addSubview(pictureView)
         topView .snp.makeConstraints { (make) in
             make.top.left.right.equalTo(contentView)
@@ -272,9 +275,9 @@ func Homedata(Homedata:HomeData?,index:IndexPath?) {
             make.width.height.equalTo(40)
         }
         namelbl .snp.makeConstraints { (make) in
-           
+            
             make.left.equalTo(iconView.snp.right).offset(10)
-           
+            
             make.centerY.equalTo(iconView.snp.centerY)
         }
         typelbl .snp.makeConstraints { (make) in
@@ -341,9 +344,9 @@ extension HomeTableViewCell: PhotoBrowserPresentDelegate {
         iv.clipsToBounds = true
         
         // 2. 设置图像（缩略图的缓存）- SDWebImage 如果已经存在本地缓存，不会发起网络请求
-       
-         let idString:NSString = "\((Homedata != nil) ? Homedata!.id : Detaildata!.id)" as NSString
-       
+        
+        let idString:NSString = "\((Homedata != nil) ? Homedata!.id : Detaildata!.id)" as NSString
+        
         if let url =  URL.init(string:"http://pic.qiushibaike.com/system/pictures/\(idString.substring(to: 5))/\((Homedata != nil) ? Homedata!.id : Detaildata!.id)/medium/\((Homedata != nil) ? Homedata!.image! : Detaildata!.image!)?imageView2/2/w/720"){
             iv.sd_setImage(with: url)
         }
@@ -354,8 +357,8 @@ extension HomeTableViewCell: PhotoBrowserPresentDelegate {
     /// 动画起始位置
     func photoBrowserPresentFromRect(indexPath: IndexPath) -> CGRect {
         
-      
-       
+        
+        
         let rect = self.convert(pictureView.frame, to: UIApplication.shared.keyWindow)
         
         return rect
@@ -366,12 +369,12 @@ extension HomeTableViewCell: PhotoBrowserPresentDelegate {
         
         // 根据缩略图的大小，等比例计算目标位置
         let idString:NSString = "\((Homedata != nil) ? Homedata!.id : Detaildata!.id)" as NSString
-//        guard let key = "http://pic.qiushibaike.com/system/pictures/\(idString.substring(to: 5))/\(Homedata!.id)/medium/\(Homedata!.image!)?imageView2/2/w/720"
-//            else {
-//                return .zero
-//        }
+        //        guard let key = "http://pic.qiushibaike.com/system/pictures/\(idString.substring(to: 5))/\(Homedata!.id)/medium/\(Homedata!.image!)?imageView2/2/w/720"
+        //            else {
+        //                return .zero
+        //        }
         let key = "http://pic.qiushibaike.com/system/pictures/\(idString.substring(to: 5))/\((Homedata != nil) ? Homedata!.id : Detaildata!.id)/medium/\((Homedata != nil) ? Homedata!.image! : Detaildata!.image!)?imageView2/2/w/720"
-         //从 sdwebImage 获取本地缓存图片
+        //从 sdwebImage 获取本地缓存图片
         guard let image = SDWebImageManager.shared().imageCache.imageFromDiskCache(forKey: key) else {
             return .zero
         }

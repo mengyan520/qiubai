@@ -12,39 +12,31 @@ class PunchesView: UIView {
     var punches:[TimeInterval]? {
         didSet {
             namelbl.text = "最近\(punches!.count)次打卡"
-            
+            currentlbl = bottomlbl
             let dd:NSMutableArray = NSMutableArray.init()
             let ddd:NSMutableArray = NSMutableArray.init()
-            var m = 1
             
-            for time in punches! {
-                dd.add((NSDate.ew_formatAbssTime(withInterval: time) as NSString).substring(to: 2))
-                ddd.add(NSDate.ew_formatAbssTime(withInterval: time)  )
-                var Bomlbl = viewWithTag(m) as? UILabel
-                if Bomlbl == nil {
-                   
-                    
-                    if m <= punches!.count - 1 {
-                        
-                        Bomlbl = UILabel.init(title: "\(m+1)", fontSize: 14, color: WHITE_COLOR, screenInset: 10)
-                        Bomlbl?.tag = m
-                        
-                        addSubview(Bomlbl!)
-                        Bomlbl!.snp.makeConstraints({ (make) in
-                            make.left.equalTo(currentlbl.snp.right)
-                            make.width.equalTo(currentlbl.snp.width)
-                            if m == punches!.count - 1 {
-                                
-                                make.right.equalTo(bottomLine.snp.right).offset(-5)
-                            }
-                            make.bottom.equalTo(snp.bottom).offset(-5)
-                        })
-                        currentlbl = Bomlbl!
-                    }
+            for i in 0..<punches!.count {
+                dd.add((NSDate.ew_formatAbssTime(withInterval: punches![i]) as NSString).substring(to: 2))
+                ddd.add(NSDate.ew_formatAbssTime(withInterval: punches![i])  )
+                var bomlbl = viewWithTag(i) as? UILabel
+                if bomlbl == nil {
+                    bomlbl = UILabel.init(title: "\(i+1)", fontSize: 14, color: WHITE_COLOR, screenInset: 10)
+                    bomlbl?.tag = i
+                    addSubview(bomlbl!)
+                    bomlbl!.snp.makeConstraints({ (make) in
+                        make.left.equalTo(currentlbl.snp.right)
+                        make.width.equalTo(currentlbl.snp.width)
+                        if i == punches!.count - 1 {
+                            
+                            make.right.equalTo(bottomLine.snp.right).offset(-5)
+                        }
+                        make.bottom.equalTo(snp.bottom).offset(-5)
+                    })
+                    currentlbl = bomlbl!
                 }
-                m = m + 1
-               
             }
+            
             
             let top = dd.value(forKeyPath: "@max.self") as! String
             let bom = dd.value(forKeyPath: "@min.self") as! String
@@ -68,14 +60,14 @@ class PunchesView: UIView {
                 i = i + 1
             }
             
-            for lbl in subviews {
-                if lbl.isKind(of: UILabel.self) {
-                    lbl.isHidden = false
-                    if lbl.tag + 1 > punches!.count   {
-                        lbl.isHidden = true
-                    }
-                }
-            }
+                        for lbl in subviews {
+                            if lbl.isKind(of: UILabel.self) {
+                                lbl.isHidden = false
+                                if lbl.tag + 1 > punches!.count   {
+                                    lbl.isHidden = true
+                                }
+                            }
+                        }
         }
     }
     // MARK: - init
@@ -89,7 +81,7 @@ class PunchesView: UIView {
         addSubview(bottomlbl)
         addSubview(topLine)
         addSubview(bottomLine)
-        currentlbl = bottomlbl
+        tag = 200
         namelbl.snp.makeConstraints { (make) in
             make.left.equalTo(snp.left).offset(10)
             make.top.equalTo(snp.top).offset(5)
@@ -115,6 +107,7 @@ class PunchesView: UIView {
             
             make.left.equalTo(topTimelbl.snp.left)
             make.bottom.equalTo(bottomlbl.snp.top).offset(-10)
+            
         }
         bottomLine.snp.makeConstraints { (make) in
             make.bottom.equalTo(bottomlbl.snp.top).offset(-15)

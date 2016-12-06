@@ -28,7 +28,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       //友盟分享注册AppKey
     UMSocialManager.default().umSocialAppkey = "57578fa267e58ee1cd000dfa"
         //设置分享到QQ互联的appID
-        UMSocialManager.default().setPlaform(.QQ, appKey: "1105457806", appSecret: nil, redirectURL: "https://www.umeng.com/social")
+        UMSocialManager.default().setPlaform(.QQ, appKey: "1105457806", appSecret: "5nUuYnCmIZrwSmEN", redirectURL: "https://www.umeng.com/social")
+      
         return true
     }
     //MARK:- 控制器

@@ -9,7 +9,12 @@
 import Foundation
 class Model: NSObject {
     
-   
+    
+    
+    
+    
+    
+    
     var count = 0
     var items:[HomeData]?
     var date:String?
@@ -26,7 +31,7 @@ class Model: NSObject {
     init(dict:[String: AnyObject]) {
         super.init()
         setValuesForKeys(dict)
-    
+        
     }
     override func setValue(_ value: Any?, forKey key: String) {
         if key == "items" {
@@ -93,26 +98,30 @@ class Model: NSObject {
             return
             
         }
-
-       
+        
+        
         
         super.setValue(value, forKey: key)
     }
     
-
+    
     override func setValue(_ value: Any?, forUndefinedKey key: String) {
-       
+        
     }
     override var description: String {
         let keys = ["items"]
         
         return dictionaryWithValues(forKeys: keys).description
     }
-
+    
 }
 
 // MARK: - 首页糗事
 class HomeData:NSObject {
+   
+    
+    
+    
     
     var high_url:String?
     var format:String?
@@ -152,10 +161,25 @@ class HomeData:NSObject {
             }
         }
     }
+    //糗友详情
+  
+
+    var article_id: Int = 0
+    
+    var user_id: Int = 0
+    var comment: Comment?
+    
+    var user_ip: String?
+    //var at_users: String?
+    var comment_user: Comment_user?
+    var comment_id: Int = 0
+    var status: Int = 0
+    
+    
     //可重用表示符号
     var cellId: String {
         var ID = textID
-      
+        
         switch format! as NSString {
         case "word":
             ID = textID
@@ -172,7 +196,7 @@ class HomeData:NSObject {
         return ID
         
     }
-
+    
     lazy var rowHeight: CGFloat = {
         
         var cell:HomeTableViewCell
@@ -181,9 +205,9 @@ class HomeData:NSObject {
             cell = HomeImageTableViewCell.init(style: .default, reuseIdentifier: ImageID)
             
         }else if self.format == "word" {
-           cell = HomeTableViewCell.init(style: .default, reuseIdentifier: textID)
+            cell = HomeTableViewCell.init(style: .default, reuseIdentifier: textID)
         }else  {
-        cell = HomeVideoTableViewCell.init(style: .default, reuseIdentifier: VideoID)
+            cell = HomeVideoTableViewCell.init(style: .default, reuseIdentifier: VideoID)
         }
         
         
@@ -194,9 +218,9 @@ class HomeData:NSObject {
         
         var cell:DetailTableViewCell
         
-       
-            cell = DetailTableViewCell.init(style: .default, reuseIdentifier: commetnID)
         
+        cell = DetailTableViewCell.init(style: .default, reuseIdentifier: commetnID)
+       
         
         
         return cell.CommentrowHeight(data: self)
@@ -205,9 +229,9 @@ class HomeData:NSObject {
     init(dict:[String:AnyObject]) {
         super.init()
         //if (dict != nil) {
-            
-            setValuesForKeys(dict)
-      //  }
+        
+        setValuesForKeys(dict)
+        //  }
     }
     override func setValue(_ value: Any?, forKey key: String) {
         if key == "user" {
@@ -220,6 +244,27 @@ class HomeData:NSObject {
             return
             
         }
+        if key == "comment" {
+            
+            if let dict = value as? [String: AnyObject] {
+                
+                comment = Comment.init(dict: dict)
+                
+            }
+            return
+            
+        }
+        if key == "comment_user" {
+            
+            if let dict = value as? [String: AnyObject] {
+                
+                comment_user = Comment_user.init(dict: dict)
+                
+            }
+            return
+            
+        }
+        
         if key == "votes" {
             
             if let dict = value as? [String: AnyObject] {
@@ -230,6 +275,7 @@ class HomeData:NSObject {
             return
             
         }
+        
         if key == "hot_comment" {
             
             if let dict = value as? [String: AnyObject] {
@@ -240,7 +286,7 @@ class HomeData:NSObject {
             return
             
         }
-
+        
         if key == "image_size" {
             
             if let dict = value as? [String: AnyObject] {
@@ -261,7 +307,7 @@ class HomeData:NSObject {
             return
             
         }
-
+        
         super.setValue(value, forKey: key)
     }
     
@@ -274,7 +320,82 @@ class HomeData:NSObject {
         
         return dictionaryWithValues(forKeys: keys).description
     }
-
+    
+}
+class  Comment: NSObject {
+    var id: Int = 0
+    var article_id: Int = 0
+    var created_at: Int = 0
+    var user_id: Int = 0
+    var like_count: Int = 0
+    var at_users: String?
+    var comment_id: Int = 0
+    var user_ip: String?
+    var liked: Bool = false
+    var user: User?
+    var status: Int = 0
+    var content: String?
+    init(dict:[String:AnyObject]) {
+        super.init()
+        setValuesForKeys(dict)
+    }
+    override func setValue(_ value: Any?, forKey key: String) {
+        if key == "user" {
+            
+            if let dict = value as? [String: AnyObject] {
+                
+                user = User.init(dict: dict)
+                
+            }
+            return
+            
+        }
+        super.setValue(value, forKey: key)
+    }
+    
+    
+    override func setValue(_ value: Any?, forUndefinedKey key: String) {
+        
+    }
+    override var description: String {
+        let keys = ["login"]
+        
+        return dictionaryWithValues(forKeys: keys).description
+    }
+    
+}
+// MARK: - Comment_user
+class Comment_user:NSObject {
+    
+    
+    var gender: String?
+    var id: Int = 0
+    var created_at: Int = 0
+    var age: Int = 0
+    var astrology: String!
+    var nick_status: Int = 0
+    var icon: String?
+    var login: String?
+    init(dict:[String:AnyObject]) {
+        super.init()
+        setValuesForKeys(dict)
+    }
+    override func setValue(_ value: Any?, forKey key: String) {
+        
+        
+        super.setValue(value, forKey: key)
+    }
+    
+    
+    override func setValue(_ value: Any?, forUndefinedKey key: String) {
+        
+    }
+    override var description: String {
+        let keys = ["login"]
+        
+        return dictionaryWithValues(forKeys: keys).description
+    }
+    
 }
 // MARK: - Hot_comment
 class Hot_comment:NSObject {
@@ -294,6 +415,12 @@ class Hot_comment:NSObject {
     var anonymous = 0
     var neg = 0
     var article_id = 0
+    var id: Int = 0
+    
+    var at_users: String!
+    
+    var user_ip: String!
+    var liked: Bool = false
     
     
     init(dict:[String:AnyObject]) {
@@ -361,10 +488,40 @@ class Article:NSObject {
             }
         }
     }
+    //糗友详情
+    
+   
+   
+    var is_me: Bool = false
+    var comment_count = 0
+    var pic_urls: [Pic_urls]?
+    //视频
+    var video:Video?
+    var topic_id = 0
+    //打卡
+    var punches:[TimeInterval]?
+    var topic: Topic?
+    var vote: String?
+    var like_count = 0
 
+    var distance: String?
+   
+    var status = 0
+    var Ftype = 0
+
+   
     //可重用表示符号
     var cellId: String {
         var ID = textID
+      
+        if (format == nil) {
+            
+            if (video != nil) {
+                 return   videoID
+                
+            }
+            return nearbyID
+        }else {
         switch format! as NSString {
         case "word":
             ID = textID
@@ -376,7 +533,7 @@ class Article:NSObject {
             break
         }
         return ID
-        
+        }
     }
     
     lazy var ArticlerowHeight: CGFloat = {
@@ -401,6 +558,15 @@ class Article:NSObject {
         setValuesForKeys(dict)
     }
     override func setValue(_ value: Any?, forKey key: String) {
+        if key == "pic_urls" {
+            var arr = [Pic_urls]()
+            for data in value as! [AnyObject] {
+                arr.append(Pic_urls.init(dict: (data as? [String : AnyObject])!))
+                
+            }
+            pic_urls = arr
+            return
+        }
         if key == "user" {
             
             if let dict = value as? [String: AnyObject] {
@@ -410,6 +576,34 @@ class Article:NSObject {
             }
             return
             
+        }
+        if key == "video" {
+            
+            if let dict = value as? [String: AnyObject] {
+                
+                video = Video.init(dict: dict)
+                
+            }
+            return
+            
+        }
+        if key == "topic" {
+            
+            if let dict = value as? [String: AnyObject] {
+                
+                topic = Topic.init(dict: dict)
+                
+            }
+            return
+            
+        }
+        if key == "type" {
+            if let dict = value as? Int {
+                
+               Ftype = dict
+                
+            }
+            return
         }
         if key == "votes" {
             
@@ -449,24 +643,24 @@ class Article:NSObject {
 // MARK: - Refer
 class Refer:NSObject {
     
-   
+    
     var user:User?
-   
+    
     var id = 0
     
     var created_at = 0
     var content:String?
     
-   
-   
-  
+    
+    
+    
     var parent_id = 0
     var like_count = 0
     var at_infos:NSDictionary?
     var floor = 0
     
     
-   
+    
     init(dict:[String:AnyObject]) {
         super.init()
         setValuesForKeys(dict)
@@ -483,7 +677,7 @@ class Refer:NSObject {
             
         }
         
-    super.setValue(value, forKey: key)
+        super.setValue(value, forKey: key)
     }
     
     
@@ -546,7 +740,7 @@ class SizeData:NSObject {
         
         return dictionaryWithValues(forKeys: keys).description
     }
-
+    
     
 }
 // MARK: - User
@@ -566,6 +760,9 @@ class User:NSObject {
     var login:String?
     var id = 0
     var icon:String?
+ 
+   
+
     init(dict:[String:AnyObject]) {
         super.init()
         setValuesForKeys(dict)
@@ -621,14 +818,15 @@ class FriendsData:NSObject {
     //打卡
     var punches:[TimeInterval]?
     var is_top = false
+    
     //可重用表示符号
     var cellId: String {
-        var ID = "nearby"
+        var ID = nearbyID
         if (video != nil) {
-            ID = "video"
-        
+            ID =  videoID
+            
         } else if (rank != 0){
-            ID = "topic"
+            ID = topicID
         }
         return ID
     }
@@ -640,8 +838,8 @@ class FriendsData:NSObject {
             cell = FriendsVideoCell.init(style: .default, reuseIdentifier: videoID)
             
         }else if  (self.rank != 0) {
-           let  cell = FriendsTopicCell.init(style: .default, reuseIdentifier: topicID)
-            return  cell.rowHeight(data: self)
+            let  Topcell = FriendsTopicCell.init(style: .default, reuseIdentifier: topicID)
+            return  Topcell.rowHeight(data: self)
         }else  {
             cell = FriendsTableViewCell.init(style: .default, reuseIdentifier: nearbyID)
         }
@@ -665,6 +863,7 @@ class FriendsData:NSObject {
             return
             
         }
+        
         if key == "user" {
             
             if let dict = value as? [String: AnyObject] {
@@ -791,6 +990,9 @@ class Topic: NSObject {
     var pic_urls:[Pic_urls]?
     var master_id = 0
     var id = 0
+    
+   
+   
     init(dict:[String:AnyObject]) {
         super.init()
         setValuesForKeys(dict)
@@ -835,7 +1037,7 @@ class Master:NSObject {
     
     var nick_status = 0
     var astrology:String?
-   
+    
     
     var created_at = 0
     
@@ -886,7 +1088,7 @@ class Avatar_urls: NSObject {
         
         return dictionaryWithValues(forKeys: keys).description
     }
-
+    
 }
 // MARK: - 直播
 //轮播
@@ -899,7 +1101,7 @@ class Banners:NSObject {
     var redirect_source = 0
     var platform_id = 0
     var redirect_id = 0
-   
+    
     init(dict:[String:AnyObject]) {
         super.init()
         setValuesForKeys(dict)
@@ -978,7 +1180,7 @@ class Lives:NSObject {
 
 class Author:NSObject {
     var origin = 0
-  
+    
     var name:String?
     
     var gender:String?
